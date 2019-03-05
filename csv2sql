@@ -1,0 +1,23 @@
+import csv
+import sqlite3
+
+# Connect to the database
+connection = sqlite3.connect('testowa.db')
+cursor = connection.cursor()
+
+# Drop and create the table
+cursor.execute('DROP TABLE IF EXISTS cosing')
+cursor.execute('CREATE TABLE cosing (Ref_No, INCI_name, INN, PhEur, CAS_No, EC_No, Chem_Name, Restriction, Function, Update_Date)')
+connection.commit()
+
+# Load the CSV file into CSV reader
+with open('testowa.csv') as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    all(next(csv_file) for i in range(9))
+    for t in csv_reader:
+        cursor.execute('INSERT INTO  cosing VALUES (?,?,?,?,?,?,?,?,?,?)', t)
+
+# Close the csv file, commit changes, and close the connection
+csv_file.close()
+connection.commit()
+connection.close()
